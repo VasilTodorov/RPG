@@ -3,26 +3,42 @@ using RPG;
 using System.Security.Cryptography;
 using System.Text;
 
-Console.OutputEncoding = Encoding.UTF8;
-
-Console.WriteLine("Hello, RPG!");
-string m = "\u25D9"; 
-Hero mage = new Mage();
-mage.AddAgility(1);
-mage.AddStrength(2);
-//mage.SetUp();
-Console.WriteLine($"My mage has Health = {mage.Health}");
-Console.WriteLine($"My mage has Mana = {mage.Mana}");
-Console.WriteLine($"My mage has Damage = {mage.Damage}");
-Console.WriteLine($"My mage has Range = {mage.Range}");
-Console.WriteLine($"My mage has Symbol = {mage.Symbol}");
-
-for(int i=0; i<10; i++)
+namespace RPG
 {
-    for(int j=0; j<10; j++)
+    public enum GameState { MainMenu, PAUSED, CharacterSelect, Exit };
+    public class Game
     {
-        Console.Write("▒");
-    }
-    Console.WriteLine();
-}
+        static void Main()
+        {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            Console.WriteLine("Hello, RPG!");
+            //string m = "\u25D9"; 
+            Hero hero = new Hero(Hero.Profession.Mage);
+            hero.AddAgility(1);
+            hero.AddStrength(2);
+            hero.Position.X = 2;
+            hero.SetUp();
+            Console.WriteLine($"My Hero has Health = {hero.Health}");
+            Console.WriteLine($"My Hero has Mana = {hero.Mana}");
+            Console.WriteLine($"My Hero has Damage = {hero.Damage}");
+            Console.WriteLine($"My Hero has Range = {hero.Range}");
+            Console.WriteLine($"My Hero has Symbol = {hero.Symbol}");
+            Console.WriteLine($"My Hero Profesion is = {hero.HeroProfesion.ToString()}");
+
+            for (int i=0; i<10; i++)
+            {
+                for(int j=0; j<10; j++)
+                {
+                    Console.Write("▒");
+                }
+                Console.WriteLine();
+            }
     
+        }
+    }
+}
+
+
+
+

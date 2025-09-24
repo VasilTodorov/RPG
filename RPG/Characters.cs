@@ -16,7 +16,7 @@ namespace RPG
         public int Damage { get;set; }
         public int Health { get;set; }
         public int Mana { get;set; }
-        public (int x, int y) Position;
+        public (int X, int Y) Position;
 
         public Character(int strength, int agilty, int inteligence, int range, string symbol)
         {
@@ -34,11 +34,26 @@ namespace RPG
             this.Damage = this.Agility * 2;
         }
     }
+    public record HeroTemplate(int Strength, int Agility, int Inteligence, int Range, string Symbol);
     public class Hero : Character
     {
-        public Hero(int strength, int agilty, int inteligence, int range, string symbol) 
-            : base(strength, agilty, inteligence, range, symbol)
-        {}
+        public enum Profession { Mage, Warrior, Archer };
+        public Profession HeroProfesion { get; }
+        private static readonly Dictionary<Profession, HeroTemplate> Templates = new()
+        {
+            { Profession.Mage, new HeroTemplate(2, 1, 3, 3, "*") },
+            { Profession.Warrior, new HeroTemplate(3, 3, 0, 1, "@") },
+            { Profession.Archer, new HeroTemplate(2, 4, 0, 2, "#") }
+        };
+        public Hero(Profession profession) : base(
+        Templates[profession].Strength,
+        Templates[profession].Agility,
+        Templates[profession].Inteligence,
+        Templates[profession].Range,
+        Templates[profession].Symbol)
+        {
+            HeroProfesion = profession;
+        }
 
         public void AddStrength(int addition)
         {            
@@ -54,35 +69,19 @@ namespace RPG
         {
             this.Agility += addition;            
         }
-    }
-    public class Mage : Hero
-    {
-        public Mage() : base(2, 1, 3, 3, "*")
+        //TODO save in database
+        public void SaveHero()
         {
-            
+            throw new NotImplementedException();
         }
     }
-    public class Warrior : Hero
-    {
-        public Warrior() : base(3, 3, 0, 1, "@")
-        {
-
-        }
-    }
-    public class Archer : Hero
-    {
-        public Archer() : base(2, 4, 0, 2, "#")
-        {
-
-        }
-    }
+    
     public class Monster : Character
     {
         static Random rnd = new Random();
         public Monster() : base(rnd.Next(1, 4), rnd.Next(1, 4), rnd.Next(1, 4), 1, "◙")
         {            
         }
-
 
     }
 
