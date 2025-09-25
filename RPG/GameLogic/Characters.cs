@@ -12,19 +12,21 @@ namespace RPG.GameLogic
         public int Agility { get; protected set; }
         public int Inteligence { get; protected set; }
         public int Range { get; protected set; }
-        public string Symbol { get; protected set; }
+        //public string Symbol { get; protected set; }
         public int Damage { get;set; }
         public int Health { get;set; }
         public int Mana { get;set; }
+        public bool Alive { get; private set; }
         public (int X, int Y) Position;
 
-        public Character(int strength, int agilty, int inteligence, int range, string symbol)
+        public Character(int strength, int agilty, int inteligence, int range)
         {
             Strength = strength;
             Agility = agilty;
             Inteligence = inteligence;
             Range = range;
-            Symbol = symbol;
+            Alive = true;
+            //Symbol = symbol;
             SetUp();
         }
         public virtual void SetUp()
@@ -32,6 +34,16 @@ namespace RPG.GameLogic
             this.Health = this.Strength * 5;
             this.Mana = this.Inteligence * 3;
             this.Damage = this.Agility * 2;
+        }
+
+        public void TakeDamage(int damage)
+        {
+            Health -= damage;
+            if (Health <= 0)
+            {
+                Health = 0;
+                Alive = false;
+            }
         }
     }
     public record HeroTemplate(int Strength, int Agility, int Intelligence, int Range, string Symbol);
@@ -45,7 +57,7 @@ namespace RPG.GameLogic
             { Profession.Warrior, new HeroTemplate(3, 3, 0, 1, "@") },
             { Profession.Archer, new HeroTemplate(2, 4, 0, 2, "#") }
         };
-
+        public string Symbol { get; protected set; }
         public int BonusStrength { get; protected set; }
         public int BonusAgility { get; protected set; }
         public int BonusIntelligence { get; protected set; }
@@ -56,47 +68,52 @@ namespace RPG.GameLogic
                   Templates[profession].Strength,
                   Templates[profession].Agility,
                   Templates[profession].Intelligence,
-                  Templates[profession].Range,
-                  Templates[profession].Symbol)
+                  Templates[profession].Range
+                  )
         {
             HeroProfesion = profession;
             BonusStrength = bonusStrength;
             BonusAgility = bonusAgility;
             BonusIntelligence = bonusIntelligence;
+            Symbol = Templates[profession].Symbol;
             SetUp();
         }
-
         public void AddStrength(int bonusStrength)
         {            
-            BonusStrength = bonusStrength;
+            BonusStrength += bonusStrength;
         }
-
         public void AddIntelligence(int bonusIntelligence)
         {            
-            BonusIntelligence = bonusIntelligence;
+            BonusIntelligence += bonusIntelligence;
         }
-
         public void AddAgility(int bonusAgility)
         {            
-            BonusAgility = bonusAgility;
+            BonusAgility += bonusAgility;
         }        
-
         public override void SetUp()
         {
             base.SetUp();
             this.Health += this.BonusStrength * 5;
             this.Mana += this.BonusIntelligence * 3;
             this.Damage += this.BonusAgility * 2;
-        }
+        }        
+
     }
     
     public class Monster : Character
     {
-        static Random rnd = new Random();
-        public Monster() : base(rnd.Next(1, 4), rnd.Next(1, 4), rnd.Next(1, 4), 1, "◙")
-        {            
+        public static Random rnd = new Random();
+        public string Symbol { get; protected set; }
+        
+        public Monster() : base(rnd.Next(1, 4), rnd.Next(1, 4), rnd.Next(1, 4), 1)
+        {
+            Symbol = "◙";
         }
+        
+        public void Attack(Hero hero)
+        {
 
+        }
     }
 
 }
