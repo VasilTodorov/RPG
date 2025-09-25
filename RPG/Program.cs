@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using RPG;
+using RPG.GameLogic;
+using RPG.Repository;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -14,11 +15,18 @@ namespace RPG
 
             Console.WriteLine("Hello, RPG!");
             //string m = "\u25D9"; 
-            Hero hero = new Hero(Hero.Profession.Mage);
+            Hero hero = new Hero(Hero.Profession.Warrior);
             hero.AddAgility(1);
             hero.AddStrength(2);
             hero.Position.X = 2;
             hero.SetUp();
+            Console.WriteLine($"My Hero has Base Strength = {hero.Strength}");
+            Console.WriteLine($"My Hero has Bonus Strength = {hero.BonusStrength}");
+            Console.WriteLine($"My Hero has Base Agility = {hero.Agility}");
+            Console.WriteLine($"My Hero has Bonus Agility = {hero.BonusAgility}");
+            Console.WriteLine($"My Hero has Base Inteligence = {hero.Inteligence}");
+            Console.WriteLine($"My Hero has Bonus Inteligence = {hero.BonusIntelligence}");
+            Console.WriteLine("**********************************************");
             Console.WriteLine($"My Hero has Health = {hero.Health}");
             Console.WriteLine($"My Hero has Mana = {hero.Mana}");
             Console.WriteLine($"My Hero has Damage = {hero.Damage}");
@@ -30,11 +38,28 @@ namespace RPG
             {
                 for(int j=0; j<10; j++)
                 {
-                    Console.Write("▒");
+                    if(i==2 & j == 4)
+                        Console.Write("*");
+                    else
+                        Console.Write("▒");
                 }
                 Console.WriteLine();
             }
-    
+            Console.WriteLine("**********************************************");
+            //Console.WriteLine(Path.GetFullPath("rpg.db"));
+            using var db = new RPGContext();
+            var repo = new HeroRepository(db);
+            repo.Save(hero);
+            Console.WriteLine("Saving Hero ...");
+            Console.WriteLine("**********************************************");
+            var loadedHero = repo.Load(1);
+            Console.WriteLine("Loading hero with id 1");
+            Console.WriteLine($"My loadedHero has Health = {loadedHero.Health}");
+            Console.WriteLine($"My loadedHero has Mana = {loadedHero.Mana}");
+            Console.WriteLine($"My loadedHero has Damage = {loadedHero.Damage}");
+            Console.WriteLine($"My loadedHero has Range = {loadedHero.Range}");
+            Console.WriteLine($"My loadedHero has Symbol = {loadedHero.Symbol}");
+            Console.WriteLine($"My loadedHero Profesion is = {loadedHero.HeroProfesion.ToString()}");
         }
     }
 }

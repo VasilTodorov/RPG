@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPG
+namespace RPG.GameLogic
 {
     public class Character
     {        
         public int Strength { get ; protected set; }
         public int Agility { get; protected set; }
         public int Inteligence { get; protected set; }
-        public int Range { get; init; }
-        public string Symbol { get; init; }
+        public int Range { get; protected set; }
+        public string Symbol { get; protected set; }
         public int Damage { get;set; }
         public int Health { get;set; }
         public int Mana { get;set; }
@@ -27,16 +27,16 @@ namespace RPG
             Symbol = symbol;
             SetUp();
         }
-        public void SetUp()
+        public virtual void SetUp()
         {
             this.Health = this.Strength * 5;
             this.Mana = this.Inteligence * 3;
             this.Damage = this.Agility * 2;
         }
     }
-    public record HeroTemplate(int Strength, int Agility, int Inteligence, int Range, string Symbol);
+    public record HeroTemplate(int Strength, int Agility, int Intelligence, int Range, string Symbol);
     public class Hero : Character
-    {
+    {    
         public enum Profession { Mage, Warrior, Archer };
         public Profession HeroProfesion { get; }
         private static readonly Dictionary<Profession, HeroTemplate> Templates = new()
@@ -45,34 +45,48 @@ namespace RPG
             { Profession.Warrior, new HeroTemplate(3, 3, 0, 1, "@") },
             { Profession.Archer, new HeroTemplate(2, 4, 0, 2, "#") }
         };
-        public Hero(Profession profession) : base(
-        Templates[profession].Strength,
-        Templates[profession].Agility,
-        Templates[profession].Inteligence,
-        Templates[profession].Range,
-        Templates[profession].Symbol)
+
+        public int BonusStrength { get; protected set; }
+        public int BonusAgility { get; protected set; }
+        public int BonusIntelligence { get; protected set; }
+        public Hero(Profession profession) : this(profession,0,0,0)
+        {}
+        public Hero(Profession profession,int bonusStrength, int bonusAgility, int bonusIntelligence)
+            : base(
+                  Templates[profession].Strength,
+                  Templates[profession].Agility,
+                  Templates[profession].Intelligence,
+                  Templates[profession].Range,
+                  Templates[profession].Symbol)
         {
             HeroProfesion = profession;
+            BonusStrength = bonusStrength;
+            BonusAgility = bonusAgility;
+            BonusIntelligence = bonusIntelligence;
+            SetUp();
         }
 
-        public void AddStrength(int addition)
+        public void AddStrength(int bonusStrength)
         {            
-            this.Strength += addition;            
+            BonusStrength = bonusStrength;
         }
 
-        public void AddInteligence(int addition)
-        {
-            this.Inteligence += addition;            
+        public void AddIntelligence(int bonusIntelligence)
+        {            
+            BonusIntelligence = bonusIntelligence;
         }
 
-        public void AddAgility(int addition)
+        public void AddAgility(int bonusAgility)
+        {            
+            BonusAgility = bonusAgility;
+        }        
+
+        public override void SetUp()
         {
-            this.Agility += addition;            
-        }
-        //TODO save in database
-        public void SaveHero()
-        {
-            throw new NotImplementedException();
+            base.SetUp();
+            this.Health += this.BonusStrength * 5;
+            this.Mana += this.BonusIntelligence * 3;
+            this.Damage += this.BonusAgility * 2;
         }
     }
     
