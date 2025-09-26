@@ -36,8 +36,8 @@ namespace RPG.GameLogic
             emptySpace = Size * Size - 1;
 
             this.hero = _hero;
-            hero.Position = (0, 0);
-            board[0,0] = BoardSpace.Hero;
+            hero.Position = (1, 1);
+            board[1,1] = BoardSpace.Hero;
             KillCount = 0;
             monsters = new List<Monster>(); 
         }
@@ -128,32 +128,6 @@ namespace RPG.GameLogic
                 }
             }
         }
-        public bool HeroMovement(string key)
-        {
-            key = key.Trim().ToUpper();
-
-            (int X, int Y) direction = key switch
-            {
-                "W" => (-1, 0), //UP
-                "S" => (1, 0),  //Down
-                "A" => (0, -1), //Left
-                "D" => (0, 1),  //Right
-                "Q" => (-1, -1),//LeftDiagonalUp
-                "E" => (-1, 1), //RightDiagonalUp
-                "Z" => (1, -1), //RightDiagonalDown
-                "X" => (1, 1),  //LeftDiagonalDown
-                _ => (0, 0) 
-            };
-            
-            if (direction == (0, 0) && key != "W" && key != "S" && key != "A" &&
-                key != "D" && key != "Q" && key != "E" && key != "Z" && key != "X")
-            {
-                return false;
-            }
-
-            return HeroMovement(direction);
-
-        }
         public bool HeroMovement((int X, int Y) direction)
         {
             if (!(Math.Abs(direction.X) <= 1 & Math.Abs(direction.Y) <= 1))
@@ -194,11 +168,12 @@ namespace RPG.GameLogic
         {
             targets[choice].TakeDamage(hero.Damage);
             if(!targets[choice].Alive)
+            {
+                KillCount++;
+                monsters.Remove(targets[choice]);
+                board[targets[choice].Position.X, targets[choice].Position.Y] = BoardSpace.Empty;
+            }
         }
-
-        public void GameTurn()
-        {
-
-        }
+        
     }
 }

@@ -12,11 +12,13 @@ namespace RPG.Repository
         private readonly RPGContext _context;
         public HeroRepository(RPGContext context) => _context = context;
 
-        public void Save(Hero hero)
+        public int Save(Hero hero)
         {
-            var model = HeroMapper.ToModel(hero);
-            _context.Heroes.Add(model);
+            var heroModel = HeroMapper.ToModel(hero);
+            _context.Heroes.Add(heroModel);
             _context.SaveChanges();
+
+            return heroModel.Id;
         }
 
         public Hero? Load(int id)

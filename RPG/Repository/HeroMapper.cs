@@ -16,7 +16,7 @@ namespace RPG.Repository
                 Profession = hero.HeroProfesion.ToString(),
                 Strength = hero.Strength,
                 Agility = hero.Agility,
-                Intelligence = hero.Inteligence,
+                Intelligence = hero.Intelligence,
                 BonusStrength = hero.BonusStrength,
                 BonusAgility = hero.BonusAgility,
                 BonusIntelligence = hero.BonusIntelligence,

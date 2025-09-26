@@ -1,4 +1,3 @@
 <Solution>
-  <Project Path="../RPGLibrary/RPGLibrary.csproj" />
   <Project Path="RPG.csproj" />
 </Solution>

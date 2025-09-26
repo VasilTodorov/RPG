@@ -10,7 +10,7 @@ namespace RPG.GameLogic
     {        
         public int Strength { get ; protected set; }
         public int Agility { get; protected set; }
-        public int Inteligence { get; protected set; }
+        public int Intelligence { get; protected set; }
         public int Range { get; protected set; }
         //public string Symbol { get; protected set; }
         public int Damage { get;set; }
@@ -19,11 +19,11 @@ namespace RPG.GameLogic
         public bool Alive { get; private set; }
         public (int X, int Y) Position;
 
-        public Character(int strength, int agilty, int inteligence, int range)
+        public Character(int strength, int agilty, int intelligence, int range)
         {
             Strength = strength;
             Agility = agilty;
-            Inteligence = inteligence;
+            Intelligence = intelligence;
             Range = range;
             Alive = true;
             //Symbol = symbol;
@@ -32,7 +32,7 @@ namespace RPG.GameLogic
         public virtual void SetUp()
         {
             this.Health = this.Strength * 5;
-            this.Mana = this.Inteligence * 3;
+            this.Mana = this.Intelligence * 3;
             this.Damage = this.Agility * 2;
         }
 
@@ -72,31 +72,28 @@ namespace RPG.GameLogic
                   )
         {
             HeroProfesion = profession;
-            BonusStrength = bonusStrength;
-            BonusAgility = bonusAgility;
-            BonusIntelligence = bonusIntelligence;
+            AddStrength(bonusStrength);
+            AddAgility(bonusAgility);
+            AddIntelligence(bonusIntelligence);            
             Symbol = Templates[profession].Symbol;
             SetUp();
         }
         public void AddStrength(int bonusStrength)
         {            
             BonusStrength += bonusStrength;
+            Strength += bonusStrength;
         }
         public void AddIntelligence(int bonusIntelligence)
         {            
             BonusIntelligence += bonusIntelligence;
+            Intelligence += bonusIntelligence;
         }
         public void AddAgility(int bonusAgility)
         {            
             BonusAgility += bonusAgility;
+            Agility += bonusAgility;
         }        
-        public override void SetUp()
-        {
-            base.SetUp();
-            this.Health += this.BonusStrength * 5;
-            this.Mana += this.BonusIntelligence * 3;
-            this.Damage += this.BonusAgility * 2;
-        }        
+                
 
     }
     
